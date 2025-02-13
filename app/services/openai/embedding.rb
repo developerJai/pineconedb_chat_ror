@@ -2,12 +2,11 @@ class Openai::Embedding
   require 'httparty'
   require 'net/http'
   require 'uri'
-  
+
   def initialize
     @headers =  {
       "Content-Type" => "application/json",
-      "Authorization" => "Bearer #{ENV["OPENAI_API_KEY"] }",
-      "OpenAI-Organization" => ENV["OPENAI_ORG_ID"]
+      "Authorization" => "Bearer #{ENV["OPENAI_API_KEY"] }"
     }
 
     @model = {
@@ -26,10 +25,8 @@ class Openai::Embedding
 
     response = HTTParty.post(@endpoint, :headers => @headers, :body => body.to_json)
     @data = JSON.parse response.body
-    # embedding = @data['data'][0]['embedding']
-    p "====================embedding"
-    p @data
-    # pinecone = Pinecone::Database::Index.new
-    # results = pinecone.query(embedding)
+    embedding = @data['data'][0]['embedding']
+    pinecone = Pinecone::Database::Index.new
+    results = pinecone.query(embedding)
   end
 end
