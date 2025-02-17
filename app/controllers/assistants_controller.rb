@@ -6,7 +6,7 @@ class AssistantsController < ApplicationController
     results = assistants.list
     render json: { results: results }
   rescue StandardError => e
-    Rails.logger.error("Error in chat: #{e.message}")
+    Rails.logger.error("Error: #{e.message}")
     render json: { error: "Internal server error" }, status: :internal_server_error
   end
 
@@ -15,7 +15,7 @@ class AssistantsController < ApplicationController
     results = assistant.upload_file
     render json: { results: results }
   rescue StandardError => e
-    Rails.logger.error("Error in chat: #{e.message}")
+    Rails.logger.error("Error: #{e.message}")
     render json: { error: "Internal server error" }, status: :internal_server_error
   end
 
@@ -30,7 +30,7 @@ class AssistantsController < ApplicationController
     render json: { results: results }
     
   rescue StandardError => e
-    Rails.logger.error("Error in chat: #{e.message}")
+    Rails.logger.error("Error: #{e.message}")
     render json: { error: "Internal server error" }, status: :internal_server_error
   end
 end

@@ -11,7 +11,8 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  post '/chat', to: 'chats#chat'
+  post '/search', to: 'chats#search'
+  post '/vectors/upsert', to: 'chats#embed_upsert'
   get '/assistants', to: 'assistants#index'
   post '/upload', to: 'assistants#upload'
   delete '/delete', to: 'assistants#delete'

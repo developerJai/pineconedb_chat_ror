@@ -17,8 +17,9 @@ class Pinecone::Database::Index
     endpoint = "#{@index_endpoint}/query"
      body = {
       "vector" => query_vector_arr,
-      "topK" => 30,
-      "includeValues" => false
+      "topK" => 50,
+      "includeValues" => false,
+      "includeMetadata": true
     }
     response = HTTParty.post(endpoint, :headers => @headers, :body => body.to_json)
     data = JSON.parse response.body
