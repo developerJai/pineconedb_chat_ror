@@ -37,7 +37,8 @@ class Openai::Embedding
             "id" => product[:id].to_s,
             "title" => product[:name],
             "description" => product[:description],
-            "base_price" => product[:base_price]          }
+            "base_price" => product[:base_price]
+          }
         }
 
       upsert = Openai::UpsertVectors.new
