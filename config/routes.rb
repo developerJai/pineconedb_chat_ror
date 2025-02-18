@@ -16,6 +16,6 @@ Rails.application.routes.draw do
   get '/assistants', to: 'assistants#index'
   post '/upload', to: 'assistants#upload'
   delete '/delete', to: 'assistants#delete'
-  post 'openai/chat/completions', to: 'chats#openai_chat_completions'
+  post '/ask', to: 'chats#openai_chat_completions'
   post 'pine/chat/completions', to: 'chats#pine_chat_completions'
 end

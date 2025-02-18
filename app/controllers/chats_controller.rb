@@ -26,14 +26,14 @@ class ChatsController < ApplicationController
   end
 
   def openai_chat_completions
-    unless params[:text].present?
-      render json: { error: "No text provided" }, status: :bad_request
+    unless params[:answer].present?
+      render json: { error: "No answer provided" }, status: :bad_request
       return
     end
 
     chat_completion = Openai::ChatCompletions.new
-    results = chat_completion.create(params[:text])
-    render json: { results: results }
+    results = chat_completion.create(params[:answer])
+    render json: { answer: results }
     
   rescue StandardError => e
     Rails.logger.error("Error: #{e.message}")
