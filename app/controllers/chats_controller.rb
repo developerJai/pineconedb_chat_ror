@@ -26,13 +26,13 @@ class ChatsController < ApplicationController
   end
 
   def openai_chat_completions
-    unless params[:answer].present?
-      render json: { error: "No answer provided" }, status: :bad_request
+    unless params[:question].present?
+      render json: { error: "No question provided" }, status: :bad_request
       return
     end
 
     chat_completion = Openai::ChatCompletions.new
-    results = chat_completion.create(params[:answer])
+    results = chat_completion.create(params[:question])
     render json: { answer: results }
     
   rescue StandardError => e
