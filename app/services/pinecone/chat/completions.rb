@@ -10,27 +10,51 @@ class Pinecone::Chat::Completions
       "content-type" => "application/json",
       "Api-Key" => ENV["PINECONE_API_KEY"]
     }
+    @assistant_name = "chat-completion" #"testing-pdf-data" 
   end
 
   def list_and_generate_response(query)
     json_data = ProductData.file_content_json
+  
+     prompt = <<~PROMPT
+      You are an AI assistant helping customers find the most relevant products. Based on the customers message below, generate a structured response:
+
+      User Message: "#{query}"
+
+      Relevant Products:
+      #{json_data}
+
+      Generate a JSON response with:
+      - "product_ids": List of relevant product IDs.
+      - "formatted_message": A customer-friendly response summarizing the products.
+
+      Response:
+    PROMPT
+
     body = {
-      "messages" => [
-        { "role" => "user", "content" => query },
-        { "role" => "assistant", "content" => "Here are the best products I found based on your query:" }
+      model: "gpt-4o",
+      messages: [
+        { role: "user", content: prompt }
       ],
-      "functions" => [
-        {
-          "name" => "generate_response",
-          "parameters" => {
-            "products" => json_data,
-            "query" => query
-          }
-        }
-      ]
+      response_format: "json"
     }
-    endpoint = "https://prod-1-data.ke.pinecone.io/assistant/chat/#{ENV["ASSISTANT_NAME"]}/chat/completions"
+
+    endpoint = "https://prod-1-data.ke.pinecone.io/assistant/chat/#{@assistant_name}/chat/completions"
     response = HTTParty.post(endpoint, headers: @headers, body: body.to_json)
-    data = JSON.parse(response.body)
+
+    parsed_response = JSON.parse(response.body)
+    p "parsed_response================="
+    p parsed_response
+    if parsed_response["choices"] && parsed_response["choices"][0] && parsed_response["choices"][0]["message"]["content"]
+      content = parsed_response["choices"][0]["message"]["content"]
+      content = content.gsub(/```json|```/, "").strip
+
+      JSON.parse(content) # Extract JSON
+    else
+      { error: "Invalid response from API" }
+    end
+  rescue JSON::ParserError => e
+    puts "JSON Parsing Error: #{e.message}"
+    { error: "Invalid response from API" }
   end
 end
